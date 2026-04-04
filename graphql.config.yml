@@ -1,0 +1,6 @@
+schema: schema.graphql
+documents: 'src/**/*.{ts,tsx,graphql}'
+extensions:
+  endpoints:
+    default:
+      url: https://tmdb.sandbox.zoosh.ie/dev/graphql
