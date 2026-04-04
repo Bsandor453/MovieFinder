@@ -4,7 +4,7 @@ const cache = new InMemoryCache();
 
 const link = new HttpLink({
   // Zoosh TMDB sandbox URI
-  uri: 'https://tmdb.sandbox.zoosh.ie/',
+  uri: 'https://tmdb.sandbox.zoosh.ie/dev/graphql',
 });
 
 export const apolloClient = new ApolloClient({
