@@ -10,8 +10,4 @@ const link = new HttpLink({
 export const apolloClient = new ApolloClient({
   cache: cache,
   link: link,
-  clientAwareness: {
-    name: 'movie-finder-web-proto',
-    version: '1.0',
-  },
 });
