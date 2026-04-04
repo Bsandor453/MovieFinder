@@ -11,8 +11,12 @@ const config: CodegenConfig = {
   generates: {
     './src/gql/': {
       preset: 'client', // Uses the client-preset
+      presetConfig: {
+        clean: true, // Deletes old generated files before regenerating
+      },
       config: {
         headerComments: ['@generated', 'biome-ignore-all'], // Ignore Biome check
+        useTypeImports: true,
       },
       plugins: [],
     },
