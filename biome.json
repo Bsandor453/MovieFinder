@@ -39,6 +39,11 @@
       "trailingCommas": "all"
     }
   },
+  "json": {
+    "parser": {
+      "allowComments": true
+    }
+  },
   "assist": {
     "enabled": true,
     "actions": {
