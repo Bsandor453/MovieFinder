@@ -1,14 +1,19 @@
 import CloseIcon from '@mui/icons-material/Close';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import StarIcon from '@mui/icons-material/Star';
 import {
   Box,
   Button,
+  Chip,
   CircularProgress,
   Dialog,
   DialogContent,
   DialogTitle,
   Divider,
+  Grid,
   IconButton,
+  Rating,
+  Stack,
   Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -50,7 +55,7 @@ export const MovieDetailModal = ({ movie, onClose }: { movie: MovieItem | null; 
     <Dialog
       open={!!movie}
       onClose={onClose}
-      maxWidth="sm"
+      maxWidth="md"
       fullWidth
       scroll="paper"
       slotProps={{
@@ -76,53 +81,111 @@ export const MovieDetailModal = ({ movie, onClose }: { movie: MovieItem | null; 
               alignItems: 'center',
             }}
           >
-            {displayMovie.name}
+            <Typography variant="h5" component="span" fontWeight="bold">
+              {displayMovie.name}
+            </Typography>
             <IconButton onClick={onClose}>
               <CloseIcon />
             </IconButton>
           </DialogTitle>
 
           <DialogContent dividers>
-            {/* Database description (short) */}
-            <Typography variant="overline" color="primary" sx={{ fontWeight: 'bold' }}>
-              Database Overview
-            </Typography>
-            <Typography variant="body1" sx={{ mb: 3 }}>
-              {displayMovie.overview}
-            </Typography>
+            <Grid container spacing={3}>
+              {/* Left column: poster image */}
+              <Grid size={{ xs: 12, sm: 4 }}>
+                <Box
+                  component="img"
+                  src={displayMovie.img?.url ?? 'https://placehold.co/300x450?text=No+Poster'}
+                  alt={displayMovie.name}
+                  sx={{
+                    width: '100%',
+                    borderRadius: 2,
+                    boxShadow: 3,
+                    display: 'block',
+                  }}
+                />
+              </Grid>
 
-            <Divider sx={{ my: 2 }} />
+              {/* Right column: Key movie info */}
+              <Grid size={{ xs: 12, sm: 8 }}>
+                <Stack spacing={2}>
+                  {/* Genres */}
+                  <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                    {displayMovie.genres?.map((genre) => (
+                      <Chip key={genre.name} label={genre.name} size="small" color="primary" variant="outlined" />
+                    ))}
+                  </Stack>
+
+                  {/* Rating & release year */}
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Rating
+                        value={(displayMovie.score || 0) / 2}
+                        precision={0.5}
+                        readOnly
+                        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                      />
+                      <Typography variant="body1" sx={{ ml: 1, fontWeight: 'bold' }}>
+                        {displayMovie.score?.toFixed(1)}
+                      </Typography>
+                    </Box>
+                    <Typography variant="subtitle1" color="text.secondary">
+                      • {displayMovie.releaseDate ? new Date(displayMovie.releaseDate).getFullYear() : 'N/A'}
+                    </Typography>
+                  </Box>
+
+                  <Divider />
+
+                  {/* Database description (short) */}
+                  <Box>
+                    <Typography variant="overline" color="primary" sx={{ fontWeight: 'bold' }}>
+                      Database Overview
+                    </Typography>
+                    <Typography variant="body1" sx={{ mt: 1 }}>
+                      {displayMovie.overview}
+                    </Typography>
+                  </Box>
+                </Stack>
+              </Grid>
+            </Grid>
 
             {/* Wikipedia description (longer) */}
-            <Typography variant="overline" color="secondary" sx={{ fontWeight: 'bold' }}>
-              Wikipedia Summary
-            </Typography>
+            <Box sx={{ mt: 4 }}>
+              <Divider sx={{ mb: 2 }}>
+                <Chip label="Wikipedia Insights" size="small" />
+              </Divider>
 
-            {loading ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
-                <CircularProgress size={24} />
-              </Box>
-            ) : wikiData ? (
-              <Box>
-                <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic', mb: 2 }}>
-                  {wikiData.extract}
+              {loading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+                  <CircularProgress size={30} />
+                </Box>
+              ) : wikiData ? (
+                <Box sx={{ p: 1 }}>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ fontStyle: 'italic', mb: 2, lineHeight: 1.6 }}
+                  >
+                    {wikiData.extract}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    size="medium"
+                    startIcon={<OpenInNewIcon />}
+                    href={wikiData.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{ borderRadius: 5 }}
+                  >
+                    Read more on Wikipedia
+                  </Button>
+                </Box>
+              ) : (
+                <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center', display: 'block' }}>
+                  No Wikipedia page found for this title.
                 </Typography>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  startIcon={<OpenInNewIcon />}
-                  href={wikiData.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Read more on Wikipedia
-                </Button>
-              </Box>
-            ) : (
-              <Typography variant="caption" display="block">
-                No Wikipedia page found for this title.
-              </Typography>
-            )}
+              )}
+            </Box>
           </DialogContent>
         </>
       )}
