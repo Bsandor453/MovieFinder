@@ -47,7 +47,7 @@ export const MovieCard = ({ movie, onClick }: MovieCardProps) => {
 
           {/* Rating */}
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-            <Rating value={movie.score / 2} precision={0.5} readOnly size="small" />
+            <Rating value={(movie.score || 0) / 2} precision={0.5} readOnly size="small" />
             <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
               {movie.score}
             </Typography>
@@ -69,7 +69,7 @@ export const MovieCard = ({ movie, onClick }: MovieCardProps) => {
           </Typography>
 
           <Typography variant="caption" display="block" sx={{ mt: 2, color: 'gray' }}>
-            Release: {movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : 'N/A'}
+            {movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : 'N/A'}
           </Typography>
         </CardContent>
       </CardActionArea>
