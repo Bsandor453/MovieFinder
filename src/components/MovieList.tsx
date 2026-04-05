@@ -1,20 +1,52 @@
 import { useQuery } from '@apollo/client/react';
-import { SEARCH_MOVIES } from '../api/queries.ts';
+import { Box, CircularProgress, Grid, Typography } from '@mui/material';
+import { SEARCH_MOVIES } from '../api/queries';
+import { MovieCard } from './MovieCard';
 
-export const MovieList = ({ term }: { term: string }) => {
+interface MovieListProps {
+  term: string;
+}
+
+// TODO: Fix any type
+export const MovieList = ({ term }: MovieListProps) => {
   const { data, loading, error } = useQuery(SEARCH_MOVIES, {
-    variables: { term: term },
+    variables: { term },
     skip: !term,
   });
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error : {error.message}</p>;
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
+        <CircularProgress size={60} />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Typography color="error" textAlign="center">
+        Error: {error.message}
+      </Typography>
+    );
+  }
+
+  const movies = data?.searchMovies || [];
+
+  if (movies.length === 0) {
+    return (
+      <Typography textAlign="center" mt={5}>
+        No movies found for "{term}". Try another search!
+      </Typography>
+    );
+  }
 
   return (
-    <ul>
-      {data?.searchMovies?.map((movie) => (
-        <li key={movie.id}>{movie.name}</li>
+    <Grid container spacing={3}>
+      {movies.map((movie: any) => (
+        <Grid key={movie.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+          <MovieCard movie={movie} onClick={() => console.log('Selected:', movie.name)} />
+        </Grid>
       ))}
-    </ul>
+    </Grid>
   );
 };
