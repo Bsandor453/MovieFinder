@@ -177,12 +177,12 @@ export const MovieDetailModal = ({ movie, onClose }: { movie: MovieItem | null; 
                     rel="noopener noreferrer"
                     sx={{ borderRadius: 5 }}
                   >
-                    Read more on Wikipedia
+                    Read full article
                   </Button>
                 </Box>
               ) : (
                 <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center', display: 'block' }}>
-                  No Wikipedia page found for this title.
+                  No additional Wikipedia information available for this movie.
                 </Typography>
               )}
             </Box>
