@@ -1,8 +1,6 @@
 import { Box, Card, CardActionArea, CardContent, CardMedia, Rating, Typography } from '@mui/material';
 import type * as React from 'react';
-import type { SearchMoviesQuery } from '../gql/graphql.ts';
-
-type MovieItem = SearchMoviesQuery['searchMovies'][0];
+import type { MovieItem } from '../types/MovieItem.ts';
 
 interface MovieCardProps {
   movie: MovieItem;

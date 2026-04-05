@@ -1,16 +1,20 @@
 import { useQuery } from '@apollo/client/react';
 import { Box, CircularProgress, Grid, Typography } from '@mui/material';
-import { SEARCH_MOVIES } from '../api/queries';
+import { useState } from 'react';
+import { SEARCH_MOVIES } from '../api/graphql/queries.ts';
 import type { SearchMoviesQuery, SearchMoviesQueryVariables } from '../gql/graphql.ts';
+import type { MovieItem } from '../types/MovieItem.ts';
+import type { MovieItemList } from '../types/MovieItemList.ts';
 import { MovieCard } from './MovieCard';
-
-type MovieList = SearchMoviesQuery['searchMovies'];
+import { MovieDetailModal } from './MovieDetailModal.tsx';
 
 interface MovieListProps {
   term: string;
 }
 
 export const MovieList = ({ term }: MovieListProps) => {
+  const [selectedMovie, setSelectedMovie] = useState<MovieItem | null>(null);
+
   const { data, loading, error } = useQuery<SearchMoviesQuery, SearchMoviesQueryVariables>(SEARCH_MOVIES, {
     variables: { term },
     skip: !term,
@@ -32,7 +36,7 @@ export const MovieList = ({ term }: MovieListProps) => {
     );
   }
 
-  const movies: MovieList = data?.searchMovies || [];
+  const movies: MovieItemList = data?.searchMovies || [];
 
   if (movies.length === 0) {
     return (
@@ -43,12 +47,15 @@ export const MovieList = ({ term }: MovieListProps) => {
   }
 
   return (
-    <Grid container spacing={3}>
-      {movies.map((movie) => (
-        <Grid key={movie.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-          <MovieCard movie={movie} onClick={() => console.log('Selected:', movie.name)} />
-        </Grid>
-      ))}
-    </Grid>
+    <>
+      <Grid container spacing={3}>
+        {movies.map((movie) => (
+          <Grid key={movie.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+            <MovieCard movie={movie} onClick={() => setSelectedMovie(movie)} />
+          </Grid>
+        ))}
+      </Grid>
+      <MovieDetailModal movie={selectedMovie} onClose={() => setSelectedMovie(null)} />
+    </>
   );
 };
