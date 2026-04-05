@@ -89,7 +89,15 @@ export const MovieDetailModal = ({ movie, onClose }: { movie: MovieItem | null; 
             </IconButton>
           </DialogTitle>
 
-          <DialogContent dividers>
+          <DialogContent
+            dividers
+            sx={{
+              overflowY: 'auto',
+              // Subtle scrollbar
+              '&::-webkit-scrollbar': { width: '8px' },
+              '&::-webkit-scrollbar-thumb': { backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: '4px' },
+            }}
+          >
             <Grid container spacing={3}>
               {/* Left column: poster image */}
               <Grid size={{ xs: 12, sm: 4 }}>
