@@ -16,8 +16,17 @@ import { fetchWikiSummary, type WikiSummary } from '../api/rest/wikipedia';
 import type { MovieItem } from '../types/MovieItem.ts';
 
 export const MovieDetailModal = ({ movie, onClose }: { movie: MovieItem | null; onClose: () => void }) => {
+  // Buffered state to keep movie data during the closing animation
+  const [displayMovie, setDisplayMovie] = useState<MovieItem | null>(movie);
   const [wikiData, setWikiData] = useState<WikiSummary | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Sync displayMovie with the movie prop when it's not null
+  useEffect(() => {
+    if (movie) {
+      setDisplayMovie(movie);
+    }
+  }, [movie]);
 
   useEffect(() => {
     let isMounted = true; // lightweight abort mechanism
@@ -30,8 +39,6 @@ export const MovieDetailModal = ({ movie, onClose }: { movie: MovieItem | null; 
           setLoading(false);
         }
       });
-    } else {
-      setWikiData(null);
     }
 
     return () => {
@@ -40,58 +47,85 @@ export const MovieDetailModal = ({ movie, onClose }: { movie: MovieItem | null; 
   }, [movie]);
 
   return (
-    <Dialog open={!!movie} onClose={onClose} maxWidth="sm" fullWidth scroll="paper">
-      <DialogTitle
-        sx={{ m: 0, p: 2, fontWeight: 'bold', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-      >
-        {movie?.name}
-        <IconButton onClick={onClose}>
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
+    <Dialog
+      open={!!movie}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      scroll="paper"
+      slotProps={{
+        transition: {
+          onExited: () => {
+            // Clean up all buffered data only after the transition finished
+            setDisplayMovie(null);
+            setWikiData(null);
+          },
+        },
+      }}
+    >
+      {/* Render content using the buffered displayMovie */}
+      {displayMovie && (
+        <>
+          <DialogTitle
+            sx={{
+              m: 0,
+              p: 2,
+              fontWeight: 'bold',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            {displayMovie.name}
+            <IconButton onClick={onClose}>
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
 
-      <DialogContent dividers>
-        {/* Database description (short) */}
-        <Typography variant="overline" color="primary" sx={{ fontWeight: 'bold' }}>
-          Database Overview
-        </Typography>
-        <Typography variant="body1" sx={{ mb: 3 }}>
-          {movie?.overview}
-        </Typography>
-
-        <Divider sx={{ my: 2 }} />
-
-        {/* Wikipedia description (longer) */}
-        <Typography variant="overline" color="secondary" sx={{ fontWeight: 'bold' }}>
-          Wikipedia Summary
-        </Typography>
-
-        {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
-            <CircularProgress size={24} />
-          </Box>
-        ) : wikiData ? (
-          <Box>
-            <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic', mb: 2 }}>
-              {wikiData.extract}
+          <DialogContent dividers>
+            {/* Database description (short) */}
+            <Typography variant="overline" color="primary" sx={{ fontWeight: 'bold' }}>
+              Database Overview
             </Typography>
-            <Button
-              variant="outlined"
-              size="small"
-              startIcon={<OpenInNewIcon />}
-              href={wikiData.url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Read more on Wikipedia
-            </Button>
-          </Box>
-        ) : (
-          <Typography variant="caption" display="block">
-            No Wikipedia page found for this title.
-          </Typography>
-        )}
-      </DialogContent>
+            <Typography variant="body1" sx={{ mb: 3 }}>
+              {displayMovie.overview}
+            </Typography>
+
+            <Divider sx={{ my: 2 }} />
+
+            {/* Wikipedia description (longer) */}
+            <Typography variant="overline" color="secondary" sx={{ fontWeight: 'bold' }}>
+              Wikipedia Summary
+            </Typography>
+
+            {loading ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
+                <CircularProgress size={24} />
+              </Box>
+            ) : wikiData ? (
+              <Box>
+                <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic', mb: 2 }}>
+                  {wikiData.extract}
+                </Typography>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<OpenInNewIcon />}
+                  href={wikiData.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Read more on Wikipedia
+                </Button>
+              </Box>
+            ) : (
+              <Typography variant="caption" display="block">
+                No Wikipedia page found for this title.
+              </Typography>
+            )}
+          </DialogContent>
+        </>
+      )}
     </Dialog>
   );
 };
