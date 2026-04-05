@@ -1,4 +1,5 @@
-import { Box, Card, CardActionArea, CardContent, Rating, Typography } from '@mui/material';
+import { Box, Card, CardActionArea, CardContent, CardMedia, Rating, Typography } from '@mui/material';
+import type * as React from 'react';
 import type { SearchMoviesQuery } from '../gql/graphql.ts';
 
 type MovieItem = SearchMoviesQuery['searchMovies'][0];
@@ -9,6 +10,8 @@ interface MovieCardProps {
 }
 
 export const MovieCard = ({ movie, onClick }: MovieCardProps) => {
+  const posterUrl = movie.img?.url ?? 'https://placehold.co/185x278?text=No+Poster'; // Fallback placeholder
+
   return (
     <Card
       sx={{
@@ -20,6 +23,22 @@ export const MovieCard = ({ movie, onClick }: MovieCardProps) => {
       }}
     >
       <CardActionArea onClick={onClick} sx={{ flexGrow: 1 }}>
+        {/* Movie poster */}
+        <CardMedia
+          component="img"
+          sx={{
+            height: 280, // Fix height
+            objectFit: 'cover',
+            bgcolor: 'grey.200',
+          }}
+          image={posterUrl}
+          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+            const target = e.currentTarget;
+            target.src = 'https://placehold.co/185x278?text=Image+Error';
+          }}
+          alt={movie.name}
+        />
+
         <CardContent>
           {/* Title */}
           <Typography variant="h6" component="div" gutterBottom sx={{ fontWeight: 'bold' }}>
