@@ -22,24 +22,39 @@ export const MovieCard = ({ movie, onClick }: MovieCardProps) => {
         '&:hover': { transform: 'scale(1.02)', boxShadow: 6 },
       }}
     >
-      <CardActionArea onClick={onClick} sx={{ flexGrow: 1 }}>
+      <CardActionArea
+        onClick={onClick}
+        sx={{
+          height: '100%', // Force to fill out the Card
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'stretch',
+          justifyContent: 'flex-start',
+        }}
+      >
         {/* Movie poster */}
-        <CardMedia
-          component="img"
-          sx={{
-            height: 280, // Fix height
-            objectFit: 'cover',
-            bgcolor: 'grey.200',
-          }}
-          image={posterUrl}
-          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-            const target = e.currentTarget;
-            target.src = 'https://placehold.co/185x278?text=Image+Error';
-          }}
-          alt={movie.name}
-        />
+        <Box sx={{ width: '100%', height: 280, overflow: 'hidden', position: 'relative' }}>
+          <CardMedia
+            component="img"
+            image={posterUrl}
+            alt={movie.name}
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover', // Cut off the excess
+              objectPosition: 'center', // Center the cut
+              bgcolor: 'grey.200',
+            }}
+            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+              e.currentTarget.src = 'https://placehold.co/185x278?text=Image+Error';
+            }}
+          />
+        </Box>
 
-        <CardContent>
+        <CardContent sx={{ flexGrow: 1 }}>
           {/* Title */}
           <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', lineHeight: 1.2, mb: 1 }}>
             {movie.name}
