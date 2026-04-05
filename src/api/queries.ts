@@ -1,6 +1,6 @@
-import { graphql } from '../gql';
+import { gql } from '@apollo/client';
 
-export const SEARCH_MOVIES = graphql(`
+export const SEARCH_MOVIES = gql`
     query SearchMovies($term: String!) {
         searchMovies(query: $term) {
             id
@@ -11,3 +11,4 @@ export const SEARCH_MOVIES = graphql(`
         }
     }
 `);
+`;
