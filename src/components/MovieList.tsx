@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client/react';
 import { Box, CircularProgress, Grid, Typography } from '@mui/material';
 import { SEARCH_MOVIES } from '../api/queries';
-import type { SearchMoviesQuery } from '../gql/graphql.ts';
+import type { SearchMoviesQuery, SearchMoviesQueryVariables } from '../gql/graphql.ts';
 import { MovieCard } from './MovieCard';
 
 type MovieList = SearchMoviesQuery['searchMovies'];
@@ -11,7 +11,7 @@ interface MovieListProps {
 }
 
 export const MovieList = ({ term }: MovieListProps) => {
-  const { data, loading, error } = useQuery(SEARCH_MOVIES, {
+  const { data, loading, error } = useQuery<SearchMoviesQuery, SearchMoviesQueryVariables>(SEARCH_MOVIES, {
     variables: { term },
     skip: !term,
   });
