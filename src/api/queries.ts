@@ -8,7 +8,9 @@ export const SEARCH_MOVIES = gql`
             overview
             releaseDate
             score
+            img: poster {
+                url: custom(size: "w500")
+            }
         }
     }
-`);
 `;
