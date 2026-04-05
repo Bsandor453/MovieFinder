@@ -1,7 +1,14 @@
 import { Box, Card, CardActionArea, CardContent, Rating, Typography } from '@mui/material';
+import type { SearchMoviesQuery } from '../gql/graphql.ts';
 
-// TODO: Fix any type
-export const MovieCard = ({ movie, onClick }: { movie: any; onClick: () => void }) => {
+type MovieItem = SearchMoviesQuery['searchMovies'][0];
+
+interface MovieCardProps {
+  movie: MovieItem;
+  onClick: () => void;
+}
+
+export const MovieCard = ({ movie, onClick }: MovieCardProps) => {
   return (
     <Card
       sx={{

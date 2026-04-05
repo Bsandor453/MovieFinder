@@ -1,13 +1,15 @@
 import { useQuery } from '@apollo/client/react';
 import { Box, CircularProgress, Grid, Typography } from '@mui/material';
 import { SEARCH_MOVIES } from '../api/queries';
+import type { SearchMoviesQuery } from '../gql/graphql.ts';
 import { MovieCard } from './MovieCard';
+
+type MovieList = SearchMoviesQuery['searchMovies'];
 
 interface MovieListProps {
   term: string;
 }
 
-// TODO: Fix any type
 export const MovieList = ({ term }: MovieListProps) => {
   const { data, loading, error } = useQuery(SEARCH_MOVIES, {
     variables: { term },
@@ -30,7 +32,7 @@ export const MovieList = ({ term }: MovieListProps) => {
     );
   }
 
-  const movies = data?.searchMovies || [];
+  const movies: MovieList = data?.searchMovies || [];
 
   if (movies.length === 0) {
     return (
@@ -42,7 +44,7 @@ export const MovieList = ({ term }: MovieListProps) => {
 
   return (
     <Grid container spacing={3}>
-      {movies.map((movie: any) => (
+      {movies.map((movie) => (
         <Grid key={movie.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
           <MovieCard movie={movie} onClick={() => console.log('Selected:', movie.name)} />
         </Grid>
