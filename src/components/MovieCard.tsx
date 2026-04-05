@@ -41,7 +41,7 @@ export const MovieCard = ({ movie, onClick }: MovieCardProps) => {
 
         <CardContent>
           {/* Title */}
-          <Typography variant="h6" component="div" gutterBottom sx={{ fontWeight: 'bold' }}>
+          <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', lineHeight: 1.2, mb: 1 }}>
             {movie.name}
           </Typography>
 
