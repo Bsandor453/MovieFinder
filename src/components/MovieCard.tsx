@@ -53,6 +53,21 @@ export const MovieCard = ({ movie, onClick }: MovieCardProps) => {
             </Typography>
           </Box>
 
+          {/* Overview */}
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              display: '-webkit-box',
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+              fontSize: '0.85rem',
+            }}
+          >
+            {movie.overview}
+          </Typography>
+
           <Typography variant="caption" display="block" sx={{ mt: 2, color: 'gray' }}>
             Release: {movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : 'N/A'}
           </Typography>
