@@ -1,4 +1,4 @@
-import { Box, Card, CardActionArea, CardContent, CardMedia, Rating, Typography } from '@mui/material';
+import { Box, Card, CardActionArea, CardContent, CardMedia, Chip, Rating, Stack, Typography } from '@mui/material';
 import type * as React from 'react';
 import type { MovieItem } from '../types/MovieItem.ts';
 
@@ -57,6 +57,19 @@ export const MovieCard = ({ movie, onClick }: MovieCardProps) => {
           <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', lineHeight: 1.2, mb: 1 }}>
             {movie.name}
           </Typography>
+
+          {/* Genres */}
+          <Stack direction="row" spacing={0.5} sx={{ mb: 1, flexWrap: 'wrap', gap: 0.5 }}>
+            {movie.genres?.slice(0, 2).map((genre) => (
+              <Chip
+                key={genre.name}
+                label={genre.name}
+                size="small"
+                variant="outlined"
+                sx={{ fontSize: '0.7rem', height: '20px' }}
+              />
+            ))}
+          </Stack>
 
           {/* Rating */}
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>

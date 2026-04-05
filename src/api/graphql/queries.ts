@@ -7,6 +7,9 @@ export const SEARCH_MOVIES = gql`
             name
             overview
             releaseDate
+            genres {
+                name
+            }
             score
             img: poster {
                 url: custom(size: "w500")
