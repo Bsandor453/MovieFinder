@@ -1,19 +1,11 @@
-import { useEffect, useState } from 'react';
 import type { SearchConfig } from '../types/SeachConfig.ts';
 import { usePopularMovies, useSimilarSearch, useTextSearch } from './useMovieSearch.ts';
 
+// Default page size for the TMBD sandbox
+const DEFAULT_PAGE_SIZE = 20;
+
 // Master hook for all movie queries
 export const useMovieCollection = (config: SearchConfig) => {
-  const [popularPage, setPopularPage] = useState(1);
-
-  // Reset logic: if the config jumps back to 1, we also reset internally
-  // Example use case: the user clicks on the title / home page button
-  useEffect(() => {
-    if (config.type === 'popular' && config.page === 1) {
-      setPopularPage(1);
-    }
-  }, [config.page, config.type]);
-
   const isPopular = config.type === 'popular';
   const isSearch = config.type === 'search';
   const isSimilar = config.type === 'similar';
@@ -25,8 +17,9 @@ export const useMovieCollection = (config: SearchConfig) => {
   // Uniform loadMore that only does something when we are in popular mode
   const handleLoadMore = () => {
     if (isPopular) {
-      const nextPage = popularPage + 1;
-      setPopularPage(nextPage);
+      // Calculate how many blocks of DEFAULT_PAGE_SIZE are already in it
+      const nextPage = Math.floor(popular.movies.length / DEFAULT_PAGE_SIZE) + 1;
+
       popular.loadMore(nextPage);
     }
   };
