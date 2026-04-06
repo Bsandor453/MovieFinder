@@ -11,7 +11,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { MovieList } from './components/MovieList';
 import type { SearchConfig } from './types/SeachConfig.ts';
 
@@ -20,39 +20,40 @@ const App = () => {
   const [searchConfig, setSearchConfig] = useState<SearchConfig>({ type: 'popular', page: 1 });
 
   // Search movies by a search term
-  const handleSearch = () => {
-    if (searchTerm.trim()) {
-      setSearchConfig({ type: 'search', term: searchTerm.trim(), page: 1 });
+  const handleSearch = useCallback(() => {
+    const trimmed = searchTerm.trim();
+    if (trimmed) {
+      setSearchConfig({ type: 'search', term: trimmed, page: 1 });
     } else {
       // If the search is cleared, go back to the popular page
       setSearchConfig({ type: 'popular', page: 1 });
     }
-  };
+  }, [searchTerm]);
 
   // Search movies by similarity to the given movie selected in the movie detail modal child
-  const handleShowSimilar = (id: string, name: string) => {
+  const handleShowSimilar = useCallback((id: string, name: string) => {
     setSearchConfig({ type: 'similar', movieId: id, movieName: name, page: 1 });
     window.scrollTo({ top: 0, behavior: 'smooth' }); // UX: scroll to the top when the list changes
-  };
+  }, []);
 
   // Go back to the normal search view from the similar movies view
-  const handleBackToSearch = () => {
+  const handleBackToSearch = useCallback(() => {
     // If we have a term in the box, go back to that search, otherwise reset
     if (searchTerm) {
       setSearchConfig({ type: 'search', term: searchTerm, page: 1 });
     } else {
       setSearchConfig({ type: 'popular', page: 1 }); // Back to popular if no search term exists
     }
-  };
+  }, [searchTerm]);
 
   // Reset to the landing page
-  const resetToPopular = () => {
+  const resetToPopular = useCallback(() => {
     setSearchTerm('');
     setSearchConfig({ type: 'popular', page: 1 });
-  };
+  }, []);
 
   // Pagination
-  const handlePageChange = (newPage: number) => {
+  const handlePageChange = useCallback((newPage: number) => {
     setSearchConfig((prev) => {
       // If we are in search OR similar movies view, we update the page
       if (prev.type === 'search' || prev.type === 'similar') {
@@ -60,9 +61,8 @@ const App = () => {
       }
       return prev;
     });
-
     window.scrollTo({ top: 0, behavior: 'smooth' }); // UX
-  };
+  }, []);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: '#f5f5f5' }}>

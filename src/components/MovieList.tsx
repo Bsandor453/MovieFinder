@@ -1,5 +1,5 @@
 import { Box, Button, CircularProgress, Pagination, Stack, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { usePopularMovies, useSimilarSearch, useTextSearch } from '../hooks/useMovieSearch';
 import type { MovieItem } from '../types/MovieItem';
 import type { SearchConfig } from '../types/SeachConfig.ts';
@@ -12,7 +12,7 @@ interface MovieListProps {
   onPageChange: (page: number) => void;
 }
 
-export const MovieList = ({ config, onShowSimilar, onPageChange }: MovieListProps) => {
+export const MovieList = memo(({ config, onShowSimilar, onPageChange }: MovieListProps) => {
   const [selectedMovie, setSelectedMovie] = useState<MovieItem | null>(null);
   const [popularPage, setPopularPage] = useState(1);
 
@@ -136,4 +136,4 @@ export const MovieList = ({ config, onShowSimilar, onPageChange }: MovieListProp
       />
     </>
   );
-};
+});
