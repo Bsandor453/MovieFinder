@@ -1,6 +1,6 @@
 import { Box, Button, CircularProgress, Pagination, Stack, Typography } from '@mui/material';
-import { memo, useEffect, useState } from 'react';
-import { usePopularMovies, useSimilarSearch, useTextSearch } from '../hooks/useMovieSearch';
+import { memo, useState } from 'react';
+import { useMovieCollection } from '../hooks/useMovieCollection.ts';
 import type { MovieItem } from '../types/MovieItem';
 import type { SearchConfig } from '../types/SeachConfig.ts';
 import { MovieDetailModal } from './MovieDetailModal';
@@ -14,56 +14,9 @@ interface MovieListProps {
 
 export const MovieList = memo(({ config, onShowSimilar, onPageChange }: MovieListProps) => {
   const [selectedMovie, setSelectedMovie] = useState<MovieItem | null>(null);
-  const [popularPage, setPopularPage] = useState(1);
 
-  const isPopular = config.type === 'popular';
-
-  useEffect(() => {
-    // If page 1 is in the config (because e.g., a reset has occurred in the App),
-    // then return the internal counter as well.
-    if (config.type === 'popular' && config.page === 1) {
-      setPopularPage(1);
-    }
-  }, [config.page, config.type]);
-
-  // All hooks are declared (mandatory in React), but the skip logic inside them ensures only the correct one fires
-
-  const popularSearch = usePopularMovies(!isPopular);
-
-  const textSearch = useTextSearch(
-    config.type === 'search' ? config.term : '',
-    config.type === 'search' ? config.page || 1 : 1,
-    config.type !== 'search',
-  );
-
-  const similarSearch = useSimilarSearch(
-    config.type === 'similar' ? config.movieId : '',
-    config.type === 'similar' ? config.page || 1 : 1,
-    config.type !== 'similar',
-  );
-
-  // Select the active result set based on the current config type
-  const getActiveData = () => {
-    switch (config.type) {
-      case 'popular':
-        return { ...popularSearch, loadMore: popularSearch.loadMore };
-      case 'search':
-        return { ...textSearch, loadMore: undefined };
-      case 'similar':
-        return { ...similarSearch, loadMore: undefined };
-      default:
-        return { movies: [], loading: false, error: null, loadMore: undefined };
-    }
-  };
-
-  const { movies, loading, error } = getActiveData();
-
-  // 'Load more' handler for popular movies
-  const handleLoadMore = () => {
-    const nextPage = popularPage + 1;
-    setPopularPage(nextPage);
-    popularSearch.loadMore(nextPage);
-  };
+  // Master hook for all movie queries
+  const { movies, loading, error, loadMore, hasLoadMore } = useMovieCollection(config);
 
   // Status handling: Loading
   if (loading && movies.length === 0) {
@@ -101,14 +54,14 @@ export const MovieList = memo(({ config, onShowSimilar, onPageChange }: MovieLis
 
       <Stack spacing={2} sx={{ mt: 4, mb: 4, alignItems: 'center' }}>
         {/* Load more: for popular movies */}
-        {config.type === 'popular' && (
+        {hasLoadMore && (
           <Button
             variant="outlined"
-            onClick={handleLoadMore}
+            onClick={loadMore}
             disabled={loading}
             startIcon={loading ? <CircularProgress size={20} /> : null}
           >
-            {loading ? 'Loading next page...' : 'Show more movies'}
+            {loading ? 'Loading...' : 'Show more movies'}
           </Button>
         )}
 
