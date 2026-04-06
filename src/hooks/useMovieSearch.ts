@@ -17,6 +17,7 @@ interface PopularMoviesResult {
   movies: MovieItem[];
   loading: boolean;
   error: ErrorLike | undefined;
+  loadMore: (nextPage: number) => void;
 }
 
 interface TextSearchResult {
@@ -33,21 +34,29 @@ interface SimilarSearchResult {
 
 // Hook for popular movies (landing page)
 export const usePopularMovies = (skip: boolean): PopularMoviesResult => {
-  const { data, loading, error } = useQuery<{ movies: MovieItem[] }>(GET_POPULAR_MOVIES, {
+  const { data, loading, error, fetchMore } = useQuery<{ popularMovies: MovieItem[] }>(GET_POPULAR_MOVIES, {
+    variables: { page: 1 },
     skip,
   });
 
+  const loadMore = (nextPage: number) => {
+    fetchMore({
+      variables: { page: nextPage },
+    });
+  };
+
   return {
-    movies: data?.movies || [],
+    movies: data?.popularMovies || [],
     loading,
     error,
+    loadMore,
   };
 };
 
 // Hook for standard text search
-export const useTextSearch = (term: string, skip: boolean): TextSearchResult => {
+export const useTextSearch = (term: string, page: number, skip: boolean): TextSearchResult => {
   const { data, loading, error } = useQuery<SearchData>(SEARCH_MOVIES, {
-    variables: { term },
+    variables: { term, page },
     skip: skip || !term,
   });
 
@@ -59,9 +68,12 @@ export const useTextSearch = (term: string, skip: boolean): TextSearchResult => 
 };
 
 // Hook for similar movies search
-export const useSimilarSearch = (movieId: string, skip: boolean): SimilarSearchResult => {
+export const useSimilarSearch = (movieId: string, page: number, skip: boolean): SimilarSearchResult => {
   const { data, loading, error } = useQuery<SimilarData>(SEARCH_SIMILAR_MOVIES, {
-    variables: { id: movieId },
+    variables: {
+      id: movieId,
+      page: page,
+    },
     skip: skip || !movieId,
   });
 

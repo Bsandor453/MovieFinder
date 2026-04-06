@@ -17,21 +17,21 @@ import type { SearchConfig } from './types/SeachConfig.ts';
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchConfig, setSearchConfig] = useState<SearchConfig>({ type: 'popular' });
+  const [searchConfig, setSearchConfig] = useState<SearchConfig>({ type: 'popular', page: 1 });
 
   // Search movies by a search term
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      setSearchConfig({ type: 'search', term: searchTerm.trim() });
+      setSearchConfig({ type: 'search', term: searchTerm.trim(), page: 1 });
     } else {
-      // If search is cleared, go back to popular
-      setSearchConfig({ type: 'popular' });
+      // If the search is cleared, go back to the popular page
+      setSearchConfig({ type: 'popular', page: 1 });
     }
   };
 
   // Search movies by similarity to the given movie selected in the movie detail modal child
   const handleShowSimilar = (id: string, name: string) => {
-    setSearchConfig({ type: 'similar', movieId: id, movieName: name });
+    setSearchConfig({ type: 'similar', movieId: id, movieName: name, page: 1 });
     window.scrollTo({ top: 0, behavior: 'smooth' }); // UX: scroll to the top when the list changes
   };
 
@@ -39,16 +39,29 @@ const App = () => {
   const handleBackToSearch = () => {
     // If we have a term in the box, go back to that search, otherwise reset
     if (searchTerm) {
-      setSearchConfig({ type: 'search', term: searchTerm });
+      setSearchConfig({ type: 'search', term: searchTerm, page: 1 });
     } else {
-      setSearchConfig({ type: 'popular' }); // Back to popular if no search term exists
+      setSearchConfig({ type: 'popular', page: 1 }); // Back to popular if no search term exists
     }
   };
 
   // Reset to the landing page
   const resetToPopular = () => {
     setSearchTerm('');
-    setSearchConfig({ type: 'popular' });
+    setSearchConfig({ type: 'popular', page: 1 });
+  };
+
+  // Pagination
+  const handlePageChange = (newPage: number) => {
+    setSearchConfig((prev) => {
+      // If we are in search OR similar movies view, we update the page
+      if (prev.type === 'search' || prev.type === 'similar') {
+        return { ...prev, page: newPage };
+      }
+      return prev;
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // UX
   };
 
   return (
@@ -109,8 +122,8 @@ const App = () => {
           )}
         </Typography>
 
-        {/* The list handles popular, search, and similar modes via its config prop */}
-        <MovieList config={searchConfig} onShowSimilar={handleShowSimilar} />
+        {/* The list handles popular, search, and similar modes via its config prop and callbacks */}
+        <MovieList config={searchConfig} onShowSimilar={handleShowSimilar} onPageChange={handlePageChange} />
       </Container>
     </Box>
   );
