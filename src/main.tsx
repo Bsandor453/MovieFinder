@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import { ApolloProvider } from '@apollo/client/react';
 import App from './App.tsx';
-import { apolloClient } from './api/graphql/apollo-client.ts';
+import { apolloClient } from './api/graphql/apolloClient.ts';
 
 const rootElement = document.getElementById('root');
 

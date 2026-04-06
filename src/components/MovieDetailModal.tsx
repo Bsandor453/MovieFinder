@@ -1,3 +1,4 @@
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import CloseIcon from '@mui/icons-material/Close';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import StarIcon from '@mui/icons-material/Star';
@@ -20,7 +21,13 @@ import { useEffect, useState } from 'react';
 import { fetchWikiSummary, type WikiSummary } from '../api/rest/wikipedia';
 import type { MovieItem } from '../types/MovieItem.ts';
 
-export const MovieDetailModal = ({ movie, onClose }: { movie: MovieItem | null; onClose: () => void }) => {
+interface MovieDetailModalProps {
+  movie: MovieItem | null;
+  onClose: () => void;
+  onShowSimilar: (id: string, name: string) => void;
+}
+
+export const MovieDetailModal = ({ movie, onClose, onShowSimilar }: MovieDetailModalProps) => {
   // Buffered state to keep movie data during the closing animation
   const [displayMovie, setDisplayMovie] = useState<MovieItem | null>(movie);
   const [wikiData, setWikiData] = useState<WikiSummary | null>(null);
@@ -98,6 +105,21 @@ export const MovieDetailModal = ({ movie, onClose }: { movie: MovieItem | null; 
               '&::-webkit-scrollbar-thumb': { backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: '4px' },
             }}
           >
+            {/* Related movies trigger button */}
+            <Button
+              fullWidth
+              variant="contained"
+              color="secondary"
+              startIcon={<AutoAwesomeIcon />}
+              onClick={() => {
+                onShowSimilar(displayMovie.id, displayMovie?.name);
+                onClose();
+              }}
+              sx={{ mb: 3, py: 1.5, fontWeight: 'bold' }}
+            >
+              Discover similar movies
+            </Button>
+
             <Grid container spacing={3}>
               {/* Left column: poster image */}
               <Grid size={{ xs: 12, sm: 4 }}>
