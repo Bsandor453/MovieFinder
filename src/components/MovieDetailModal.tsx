@@ -194,7 +194,16 @@ export const MovieDetailModal = ({ movie, onClose, onShowSimilar }: MovieDetailM
                   <Typography
                     variant="body2"
                     color="text.secondary"
-                    sx={{ fontStyle: 'italic', mb: 2, lineHeight: 1.6 }}
+                    sx={{
+                      fontStyle: 'italic',
+                      mb: 2,
+                      lineHeight: 1.6,
+                      display: '-webkit-box',
+                      lineClamp: 6,
+                      WebkitLineClamp: 6,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
                   >
                     {wikiData.extract}
                   </Typography>
