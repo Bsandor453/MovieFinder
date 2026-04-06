@@ -66,6 +66,19 @@ export const MovieDetailModal = ({ movie, onClose, onShowSimilar }: MovieDetailM
       fullWidth
       scroll="paper"
       slotProps={{
+        backdrop: {
+          sx: {
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+            backdropFilter: 'blur(8px)',
+            transition: 'backdrop-filter 0.3s ease',
+          },
+        },
+        paper: {
+          sx: {
+            borderRadius: 3,
+            boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.2)',
+          },
+        },
         transition: {
           onExited: () => {
             // Clean up all buffered data only after the transition finished
