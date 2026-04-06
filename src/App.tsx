@@ -17,18 +17,22 @@ import type { SearchConfig } from './types/SeachConfig.ts';
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchConfig, setSearchConfig] = useState<SearchConfig | null>(null);
+  const [searchConfig, setSearchConfig] = useState<SearchConfig>({ type: 'popular' });
 
   // Search movies by a search term
   const handleSearch = () => {
     if (searchTerm.trim()) {
       setSearchConfig({ type: 'search', term: searchTerm.trim() });
+    } else {
+      // If search is cleared, go back to popular
+      setSearchConfig({ type: 'popular' });
     }
   };
 
   // Search movies by similarity to the given movie selected in the movie detail modal child
   const handleShowSimilar = (id: string, name: string) => {
     setSearchConfig({ type: 'similar', movieId: id, movieName: name });
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // UX: scroll to the top when the list changes
   };
 
   // Go back to the normal search view from the similar movies view
@@ -37,8 +41,14 @@ const App = () => {
     if (searchTerm) {
       setSearchConfig({ type: 'search', term: searchTerm });
     } else {
-      setSearchConfig(null);
+      setSearchConfig({ type: 'popular' }); // Back to popular if no search term exists
     }
+  };
+
+  // Reset to the landing page
+  const resetToPopular = () => {
+    setSearchTerm('');
+    setSearchConfig({ type: 'popular' });
   };
 
   return (
@@ -46,8 +56,16 @@ const App = () => {
       {/* Sticky header */}
       <AppBar position="sticky" sx={{ bgcolor: 'white', color: 'black', boxShadow: 1 }}>
         <Toolbar sx={{ justifyContent: 'center', py: 1, gap: 2 }}>
-          {/* Back button only visible in 'similar' mode */}
-          {searchConfig?.type === 'similar' && (
+          {/* Logo that resets the app */}
+          <Typography
+            variant="h6"
+            sx={{ cursor: 'pointer', display: { xs: 'none', md: 'block' }, fontWeight: 'bold' }}
+            onClick={resetToPopular}
+          >
+            MovieFinder
+          </Typography>
+
+          {searchConfig.type === 'similar' && (
             <Button startIcon={<ArrowBackIcon />} onClick={handleBackToSearch} variant="outlined" size="small">
               Back
             </Button>
@@ -78,26 +96,21 @@ const App = () => {
 
       {/* Main content */}
       <Container maxWidth="xl" sx={{ mt: 4, mb: 4, flexGrow: 1 }}>
-        {!searchConfig ? (
-          <Box sx={{ textAlign: 'center', mt: 10 }}>
-            <Typography variant="h4" color="text.secondary">
-              Search for your favorite movies! 🍿
-            </Typography>
-          </Box>
-        ) : (
-          <>
-            {/* Context title based on search mode */}
-            <Typography variant="h5" sx={{ color: 'text.primary', mb: 3, fontWeight: 'bold' }}>
-              {searchConfig.type === 'search' ? 'Movies result for search: ' : 'Movies similar to: '}
-              <Box component="span" sx={{ color: 'primary.main' }}>
-                {searchConfig.type === 'search' ? searchConfig.term : searchConfig.movieName}
-              </Box>
-            </Typography>
+        {/* Context title based on search mode */}
+        <Typography variant="h5" sx={{ color: 'text.primary', mb: 3, fontWeight: 'bold' }}>
+          {searchConfig.type === 'popular' && 'Popular Movies'}
+          {searchConfig.type === 'search' && 'Search results for: '}
+          {searchConfig.type === 'similar' && 'Movies similar to: '}
 
-            {/* The movie list: either search results or similar movies to the selected movie in the detail modal */}
-            <MovieList config={searchConfig} onShowSimilar={handleShowSimilar} />
-          </>
-        )}
+          {searchConfig.type !== 'popular' && (
+            <Box component="span" sx={{ color: 'primary.main' }}>
+              {searchConfig.type === 'search' ? searchConfig.term : searchConfig.movieName}
+            </Box>
+          )}
+        </Typography>
+
+        {/* The list handles popular, search, and similar modes via its config prop */}
+        <MovieList config={searchConfig} onShowSimilar={handleShowSimilar} />
       </Container>
     </Box>
   );

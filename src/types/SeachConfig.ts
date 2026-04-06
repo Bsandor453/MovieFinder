@@ -1,3 +1,7 @@
+export interface PopularSearchConfig {
+  type: 'popular';
+}
+
 export interface TextSearchConfig {
   type: 'search';
   term: string;
@@ -9,4 +13,4 @@ export interface SimilarSearchConfig {
   movieName: string;
 }
 
-export type SearchConfig = TextSearchConfig | SimilarSearchConfig;
+export type SearchConfig = PopularSearchConfig | TextSearchConfig | SimilarSearchConfig;

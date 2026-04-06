@@ -1,6 +1,6 @@
 import type { ErrorLike } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
-import { SEARCH_MOVIES, SEARCH_SIMILAR_MOVIES } from '../api/graphql/queries';
+import { GET_POPULAR_MOVIES, SEARCH_MOVIES, SEARCH_SIMILAR_MOVIES } from '../api/graphql/queries';
 import type { MovieItem } from '../types/MovieItem';
 
 interface SearchData {
@@ -11,6 +11,12 @@ interface SimilarData {
   movie: {
     similar: MovieItem[];
   };
+}
+
+interface PopularMoviesResult {
+  movies: MovieItem[];
+  loading: boolean;
+  error: ErrorLike | undefined;
 }
 
 interface TextSearchResult {
@@ -24,6 +30,19 @@ interface SimilarSearchResult {
   loading: boolean;
   error: ErrorLike | undefined;
 }
+
+// Hook for popular movies (landing page)
+export const usePopularMovies = (skip: boolean): PopularMoviesResult => {
+  const { data, loading, error } = useQuery<{ movies: MovieItem[] }>(GET_POPULAR_MOVIES, {
+    skip,
+  });
+
+  return {
+    movies: data?.movies || [],
+    loading,
+    error,
+  };
+};
 
 // Hook for standard text search
 export const useTextSearch = (term: string, skip: boolean): TextSearchResult => {

@@ -20,6 +20,18 @@ export const MOVIE_FIELDS = gql`
 `;
 
 /**
+ * Fetch popular movies for the landing page.
+ */
+export const GET_POPULAR_MOVIES = gql`
+    query GetPopularMovies {
+        movies: popularMovies {
+            ...MovieFields
+        }
+    }
+    ${MOVIE_FIELDS}
+`;
+
+/**
  * Standard search by text term.
  */
 export const SEARCH_MOVIES = gql`
