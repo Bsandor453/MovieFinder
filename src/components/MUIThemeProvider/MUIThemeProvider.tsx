@@ -1,6 +1,8 @@
 import { createTheme, type PaletteMode, ThemeProvider } from '@mui/material';
 import { createContext, type ReactNode, useContext, useMemo, useState } from 'react';
 
+const DARK_BG = '#0a1929';
+
 const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 export const useColorMode = () => useContext(ColorModeContext);
@@ -31,7 +33,7 @@ export const MUIThemeProvider = ({ children }: { children: ReactNode }) => {
       createTheme({
         palette: {
           mode,
-          ...(mode === 'dark' ? { background: { default: '#0a1929', paper: '#0a1929' } } : {}),
+          ...(mode === 'dark' ? { background: { default: DARK_BG, paper: DARK_BG } } : {}),
         },
       }),
     [mode],
