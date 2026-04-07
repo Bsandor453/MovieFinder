@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 import { memo } from 'react';
 import type { MovieItem } from '../../types/MovieItem.ts';
-import { MovieCard } from '../MovieCard.tsx';
+import { MovieCard } from '../MovieCard/MovieCard.tsx';
 import * as S from './MovieGrid.styles';
 
 interface MovieGridProps {
