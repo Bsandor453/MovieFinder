@@ -1,7 +1,7 @@
 import { Box, Container } from '@mui/material';
 import * as S from '../../pages/Home/Home.styles';
 import type { SearchConfig } from '../../types/SeachConfig';
-import { MovieList } from '../MovieList';
+import { MovieList } from '../MovieList/MovieList.tsx';
 
 interface MainContentProps {
   config: SearchConfig;

@@ -1,11 +1,12 @@
-import { Button, CircularProgress, Grid, Pagination, Stack, Typography } from '@mui/material';
+import { Button, CircularProgress, Grid, Pagination } from '@mui/material';
 import { memo, useState } from 'react';
-import { useMovieCollection } from '../hooks/useMovieCollection.ts';
-import type { MovieItem } from '../types/MovieItem';
-import type { SearchConfig } from '../types/SeachConfig.ts';
-import { MovieCard } from './MovieCard.tsx';
-import { MovieDetailModal } from './MovieDetailModal';
-import { MovieGrid } from './MovieGrid';
+import { useMovieCollection } from '../../hooks/useMovieCollection.ts';
+import type { MovieItem } from '../../types/MovieItem';
+import type { SearchConfig } from '../../types/SeachConfig.ts';
+import { MovieCard } from '../MovieCard.tsx';
+import { MovieDetailModal } from '../MovieDetailModal.tsx';
+import { MovieGrid } from '../MovieGrid.tsx';
+import * as S from './MovieList.styles';
 
 interface MovieListProps {
   config: SearchConfig;
@@ -37,11 +38,7 @@ export const MovieList = memo(({ config, onShowSimilar, onPageChange }: MovieLis
 
   // Status handling: Error
   if (error) {
-    return (
-      <Typography color="error" textAlign="center" sx={{ mt: 5, fontWeight: 'medium' }}>
-        Failed to load movies: {error.message}
-      </Typography>
-    );
+    return <S.StatusMessage color="error">Failed to load movies: {error.message}</S.StatusMessage>;
   }
 
   // Status handling: Empty
@@ -49,19 +46,15 @@ export const MovieList = memo(({ config, onShowSimilar, onPageChange }: MovieLis
     const noResultsMessage =
       config.type === 'search' ? `No movies found for "${config.term}".` : 'No movies available at the moment.';
 
-    return (
-      <Typography textAlign="center" mt={10} color="text.secondary" variant="h6">
-        {noResultsMessage} Try a different search!
-      </Typography>
-    );
+    return <S.EmptyStateWrapper variant="h6">{noResultsMessage} Try a different search!</S.EmptyStateWrapper>;
   }
 
   return (
     <>
       <MovieGrid movies={movies} onSelect={setSelectedMovie} />
 
-      <Stack spacing={2} sx={{ mt: 4, mb: 4, alignItems: 'center' }}>
-        {/* Load more: for popular movies */}
+      {/* Load more button: for popular movies mode */}
+      <S.PaginationStack spacing={2}>
         {hasLoadMore && (
           <Button
             variant="outlined"
@@ -83,7 +76,7 @@ export const MovieList = memo(({ config, onShowSimilar, onPageChange }: MovieLis
             disabled={loading}
           />
         )}
-      </Stack>
+      </S.PaginationStack>
 
       <MovieDetailModal
         movie={selectedMovie}
