@@ -2,6 +2,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SearchIcon from '@mui/icons-material/Search';
 import { AppBar, Box, Container, IconButton, InputAdornment, TextField, Toolbar, Typography } from '@mui/material';
 import { useCallback, useState } from 'react';
+import logo from './assets/logo.png';
 import { MovieList } from './components/MovieList';
 import { ThemeToggleButton } from './components/ThemeToggleButton.tsx';
 import type { SearchConfig } from './types/SeachConfig.ts';
@@ -60,19 +61,45 @@ const App = () => {
       {/* Sticky header */}
       <AppBar position="sticky" sx={{ bgcolor: 'background.paper', color: 'text.primary', boxShadow: 1 }}>
         <Toolbar sx={{ py: 1, gap: { xs: 1, sm: 2 } }}>
-          {/* Logo: desktop only */}
-          <Typography
-            variant="h6"
-            sx={{
-              cursor: 'pointer',
-              display: { xs: 'none', md: 'block' },
-              fontWeight: 'bold',
-              whiteSpace: 'nowrap',
-            }}
+          {/* Logo & brand group: desktop only */}
+          <Box
             onClick={resetToPopular}
+            sx={{
+              display: { xs: 'none', md: 'flex' },
+              alignItems: 'center',
+              cursor: 'pointer',
+              '&:hover': {
+                opacity: 0.85,
+                '& .logo-text': { color: 'primary.main' },
+              },
+              transition: 'all 0.2s ease-in-out',
+            }}
           >
-            MovieFinder
-          </Typography>
+            <Box
+              component="img"
+              src={logo}
+              alt="MovieFinder Logo"
+              sx={{
+                height: 48,
+                width: 'auto',
+                objectFit: 'contain',
+              }}
+            />
+
+            <Typography
+              variant="h6"
+              className="logo-text"
+              sx={{
+                fontWeight: 'bold',
+                whiteSpace: 'nowrap',
+                letterSpacing: '0.5px',
+                color: 'text.primary',
+                transition: 'color 0.2s',
+              }}
+            >
+              MovieFinder
+            </Typography>
+          </Box>
 
           {/* Back button: Similar movies view */}
           {searchConfig.type === 'similar' && (
