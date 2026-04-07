@@ -17,9 +17,6 @@ importers:
       '@emotion/styled':
         specifier: ^11.14.1
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
-      '@graphql-typed-document-node/core':
-        specifier: ^3.2.0
-        version: 3.2.0(graphql@16.13.2)
       '@mui/icons-material':
         specifier: ^7.3.9
         version: 7.3.9(@mui/material@7.3.9(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react@19.2.4))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(react@19.2.4)
@@ -35,12 +32,6 @@ importers:
       react-dom:
         specifier: ^19.2.4
         version: 19.2.4(react@19.2.4)
-      rimraf:
-        specifier: ^6.1.3
-        version: 6.1.3
-      rxjs:
-        specifier: ^7.8.2
-        version: 7.8.2
     devDependencies:
       '@biomejs/biome':
         specifier: 2.4.10
@@ -51,6 +42,9 @@ importers:
       '@graphql-codegen/client-preset':
         specifier: ^5.2.4
         version: 5.2.4(graphql@16.13.2)
+      '@graphql-typed-document-node/core':
+        specifier: ^3.2.0
+        version: 3.2.0(graphql@16.13.2)
       '@playwright/test':
         specifier: ^1.59.1
         version: 1.59.1
@@ -84,9 +78,9 @@ importers:
       msw:
         specifier: ^2.13.1
         version: 2.13.1(@types/node@24.12.2)(typescript@5.9.3)
-      tailwindcss:
-        specifier: ^4.2.2
-        version: 4.2.2
+      rimraf:
+        specifier: ^6.1.3
+        version: 6.1.3
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
@@ -2242,9 +2236,6 @@ packages:
   tagged-tag@1.0.0:
     resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
     engines: {node: '>=20'}
-
-  tailwindcss@4.2.2:
-    resolution: {integrity: sha512-KWBIxs1Xb6NoLdMVqhbhgwZf2PGBpPEiwOqgI4pFIYbNTfBXiKYyWoTsXgBQ9WFg/OlhnvHaY+AEpW7wSmFo2Q==}
 
   timeout-signal@2.0.0:
     resolution: {integrity: sha512-YBGpG4bWsHoPvofT6y/5iqulfXIiIErl5B0LdtHT1mGXDFTAhhRrbUpTvBgYbovr+3cKblya2WAOcpoy90XguA==}
@@ -4765,8 +4756,6 @@ snapshots:
       whatwg-mimetype: 4.0.0
 
   tagged-tag@1.0.0: {}
-
-  tailwindcss@4.2.2: {}
 
   timeout-signal@2.0.0: {}
 
