@@ -1,18 +1,9 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SearchIcon from '@mui/icons-material/Search';
-import {
-  AppBar,
-  Box,
-  Button,
-  Container,
-  IconButton,
-  InputAdornment,
-  TextField,
-  Toolbar,
-  Typography,
-} from '@mui/material';
+import { AppBar, Box, Container, IconButton, InputAdornment, TextField, Toolbar, Typography } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { MovieList } from './components/MovieList';
+import { ThemeToggleButton } from './components/ThemeToggleButton.tsx';
 import type { SearchConfig } from './types/SeachConfig.ts';
 
 const App = () => {
@@ -65,25 +56,36 @@ const App = () => {
   }, []);
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: '#f5f5f5' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default' }}>
       {/* Sticky header */}
-      <AppBar position="sticky" sx={{ bgcolor: 'white', color: 'black', boxShadow: 1 }}>
-        <Toolbar sx={{ justifyContent: 'center', py: 1, gap: 2 }}>
-          {/* Logo that resets the app */}
+      <AppBar position="sticky" sx={{ bgcolor: 'background.paper', color: 'text.primary', boxShadow: 1 }}>
+        <Toolbar sx={{ py: 1, gap: { xs: 1, sm: 2 } }}>
+          {/* Logo: desktop only */}
           <Typography
             variant="h6"
-            sx={{ cursor: 'pointer', display: { xs: 'none', md: 'block' }, fontWeight: 'bold' }}
+            sx={{
+              cursor: 'pointer',
+              display: { xs: 'none', md: 'block' },
+              fontWeight: 'bold',
+              whiteSpace: 'nowrap',
+            }}
             onClick={resetToPopular}
           >
             MovieFinder
           </Typography>
 
+          {/* Back button: Similar movies view */}
           {searchConfig.type === 'similar' && (
-            <Button startIcon={<ArrowBackIcon />} onClick={handleBackToSearch} variant="outlined" size="small">
-              Back
-            </Button>
+            <IconButton
+              onClick={handleBackToSearch}
+              color="primary"
+              sx={{ display: { xs: 'flex', sm: 'inline-flex' } }}
+            >
+              <ArrowBackIcon />
+            </IconButton>
           )}
 
+          {/* Search bar: responsive width */}
           <TextField
             variant="outlined"
             size="small"
@@ -91,7 +93,12 @@ const App = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-            sx={{ width: { xs: '100%', sm: '500px' } }}
+            sx={{
+              flexGrow: 1,
+              maxWidth: { xs: '100%', sm: '500px' },
+              ml: { xs: 0, md: 'auto' },
+              mr: { xs: 0, md: 'auto' },
+            }}
             slotProps={{
               input: {
                 endAdornment: (
@@ -104,6 +111,9 @@ const App = () => {
               },
             }}
           />
+
+          {/* Theme switcher: always visible at the end */}
+          <ThemeToggleButton />
         </Toolbar>
       </AppBar>
 
