@@ -5,6 +5,7 @@ import {
   CardContent,
   CardMedia,
   Chip,
+  CircularProgress,
   Rating,
   Skeleton,
   Stack,
@@ -49,7 +50,22 @@ export const MovieCard = memo(({ movie, onClick, isLoading }: MovieCardProps) =>
         {/* Movie poster */}
         <Box sx={{ width: '100%', height: 280, overflow: 'hidden', position: 'relative' }}>
           {isLoading ? (
-            <Skeleton variant="rectangular" width="100%" height="100%" animation="wave" />
+            <>
+              <Skeleton variant="rectangular" width="100%" height="100%" animation="wave" />
+              {/* Absolute centered spinner over the skeleton */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  display: 'flex',
+                  zIndex: 1,
+                }}
+              >
+                <CircularProgress size={40} thickness={4} sx={{ color: 'grey.500' }} />
+              </Box>
+            </>
           ) : (
             <CardMedia
               component="img"
