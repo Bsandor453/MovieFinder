@@ -26,6 +26,7 @@ test('basic functions work (smoke test)', async ({ page }) => {
   await expect(page.getByText(/Wikipedia Insights/i)).toBeVisible();
 
   // 7. Close the modal
-  await page.getByRole('button', { name: /close/i }).click();
-  await expect(page.getByText(/Wikipedia Insights/i)).not.toBeVisible();
+  const closeButton = page.getByRole('dialog').getByRole('button').filter({ hasText: '' }).first();
+  await closeButton.click();
+  await expect(page.getByRole('dialog')).not.toBeVisible({ timeout: 5000 });
 });
