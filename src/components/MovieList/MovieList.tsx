@@ -4,7 +4,7 @@ import { useMovieCollection } from '../../hooks/useMovieCollection.ts';
 import type { MovieItem } from '../../types/MovieItem';
 import type { SearchConfig } from '../../types/SeachConfig.ts';
 import { MovieCard } from '../MovieCard/MovieCard.tsx';
-import { MovieDetailModal } from '../MovieDetailModal.tsx';
+import { MovieDetailModal } from '../MovieDetailModal/MovieDetailModal.tsx';
 import { MovieGrid } from '../MovieGrid/MovieGrid.tsx';
 import * as S from './MovieList.styles';
 

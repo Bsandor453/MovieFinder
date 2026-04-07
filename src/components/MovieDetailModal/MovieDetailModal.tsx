@@ -7,8 +7,6 @@ import {
   Button,
   Chip,
   CircularProgress,
-  Dialog,
-  DialogContent,
   DialogTitle,
   Divider,
   Grid,
@@ -17,9 +15,11 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import type { TransitionProps } from '@mui/material/transitions';
 import { useEffect, useState } from 'react';
-import { fetchWikiSummary, type WikiSummary } from '../api/rest/wikipedia';
-import type { MovieItem } from '../types/MovieItem.ts';
+import { fetchWikiSummary, type WikiSummary } from '../../api/rest/wikipedia.ts';
+import type { MovieItem } from '../../types/MovieItem.ts';
+import * as S from './MovieDetailModal.styles';
 
 interface MovieDetailModalProps {
   movie: MovieItem | null;
@@ -59,33 +59,20 @@ export const MovieDetailModal = ({ movie, onClose, onShowSimilar }: MovieDetailM
   }, [movie]);
 
   return (
-    <Dialog
+    <S.StyledDialog
       open={!!movie}
       onClose={onClose}
       maxWidth="md"
       fullWidth
       scroll="paper"
       slotProps={{
-        backdrop: {
-          sx: {
-            backgroundColor: 'rgba(0, 0, 0, 0.4)',
-            backdropFilter: 'blur(8px)',
-            transition: 'backdrop-filter 0.3s ease',
-          },
-        },
-        paper: {
-          sx: {
-            borderRadius: 3,
-            boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.2)',
-          },
-        },
         transition: {
           onExited: () => {
             // Clean up all buffered data only after the transition finished
             setDisplayMovie(null);
             setWikiData(null);
           },
-        },
+        } as TransitionProps, // explicit cast: to hide the unused property warning,
       }}
     >
       {/* Render content using the buffered displayMovie */}
@@ -109,23 +96,14 @@ export const MovieDetailModal = ({ movie, onClose, onShowSimilar }: MovieDetailM
             </IconButton>
           </DialogTitle>
 
-          <DialogContent
-            dividers
-            sx={{
-              overflowY: 'auto',
-              // Subtle scrollbar
-              '&::-webkit-scrollbar': { width: '8px' },
-              '&::-webkit-scrollbar-thumb': { backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: '4px' },
-            }}
-          >
+          <S.StyledDialogContent dividers>
             <Grid container spacing={3}>
               {/* Left column: poster image */}
               <Grid size={{ xs: 12, sm: 4 }}>
                 <Box>
-                  <Box
-                    component="img"
+                  <S.PosterImage
                     src={displayMovie.img?.url ?? 'https://placehold.co/300x450?text=No+Poster'}
-                    sx={{ width: '100%', borderRadius: 2, boxShadow: 3 }}
+                    alt={displayMovie.name}
                   />
 
                   {/* Similar movies button */}
@@ -201,22 +179,9 @@ export const MovieDetailModal = ({ movie, onClose, onShowSimilar }: MovieDetailM
                 </Box>
               ) : wikiData ? (
                 <Box sx={{ p: 1 }}>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{
-                      fontStyle: 'italic',
-                      mb: 2,
-                      lineHeight: 1.6,
-                      display: '-webkit-box',
-                      lineClamp: 6,
-                      WebkitLineClamp: 6,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                    }}
-                  >
+                  <S.WikiExtract variant="body2" color="text.secondary">
                     {wikiData.extract}
-                  </Typography>
+                  </S.WikiExtract>
                   <Button
                     variant="contained"
                     size="medium"
@@ -235,9 +200,9 @@ export const MovieDetailModal = ({ movie, onClose, onShowSimilar }: MovieDetailM
                 </Typography>
               )}
             </Box>
-          </DialogContent>
+          </S.StyledDialogContent>
         </>
       )}
-    </Dialog>
+    </S.StyledDialog>
   );
 };
