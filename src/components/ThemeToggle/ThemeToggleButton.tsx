@@ -1,7 +1,7 @@
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import SunnyIcon from '@mui/icons-material/Sunny';
 import { IconButton, useTheme } from '@mui/material';
-import { useColorMode } from './MUIThemeProvider';
+import { useColorMode } from '../MUIThemeProvider.tsx';
 
 export const ThemeToggleButton = () => {
   const theme = useTheme();

@@ -1,11 +1,9 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import SearchIcon from '@mui/icons-material/Search';
-import { AppBar, Box, Container, IconButton, InputAdornment, TextField, Toolbar, Typography } from '@mui/material';
 import { useCallback, useState } from 'react';
-import logo from '../../assets/logo.png';
-import { MovieList } from '../../components/MovieList.tsx';
-import { ThemeToggleButton } from '../../components/ThemeToggle/ThemeToggleButton.tsx';
-import type { SearchConfig } from '../../types/SeachConfig.ts';
+import { Footer } from '../../components/Layout/Footer';
+import { Header } from '../../components/Layout/Header';
+import { MainContent } from '../../components/Layout/MainContent.tsx';
+import type { SearchConfig } from '../../types/SeachConfig';
+import * as S from './Home.styles';
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -29,7 +27,7 @@ const Home = () => {
   }, []);
 
   // Go back to the normal search view from the similar movies view
-  const handleBackToSearch = useCallback(() => {
+  const handleBack = useCallback(() => {
     // If we have a term in the box, go back to that search, otherwise reset
     if (searchTerm) {
       setSearchConfig({ type: 'search', term: searchTerm, page: 1 });
@@ -57,112 +55,23 @@ const Home = () => {
   }, []);
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default' }}>
-      {/* Sticky header */}
-      <AppBar position="sticky" sx={{ bgcolor: 'background.paper', color: 'text.primary', boxShadow: 1 }}>
-        <Toolbar sx={{ py: 1, gap: { xs: 1, sm: 2 } }}>
-          {/* Logo & brand group: desktop only */}
-          <Box
-            onClick={resetToPopular}
-            sx={{
-              display: { xs: 'none', md: 'flex' },
-              alignItems: 'center',
-              cursor: 'pointer',
-              '&:hover': {
-                opacity: 0.85,
-                '& .logo-text': { color: 'primary.main' },
-              },
-              transition: 'all 0.2s ease-in-out',
-            }}
-          >
-            <Box
-              component="img"
-              src={logo}
-              alt="MovieFinder Logo"
-              sx={{
-                height: 48,
-                width: 'auto',
-                objectFit: 'contain',
-              }}
-            />
+    <S.HomeWrapper>
+      {/* Sticky header: Logo, search bar, dark mode settings */}
+      <Header
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        onSearch={handleSearch}
+        onReset={resetToPopular}
+        showBack={searchConfig.type === 'similar'}
+        onBack={handleBack}
+      />
 
-            <Typography
-              variant="h6"
-              className="logo-text"
-              sx={{
-                fontWeight: 'bold',
-                whiteSpace: 'nowrap',
-                letterSpacing: '0.5px',
-                color: 'text.primary',
-                transition: 'color 0.2s',
-              }}
-            >
-              MovieFinder
-            </Typography>
-          </Box>
+      {/* Main content: The movie list */}
+      <MainContent config={searchConfig} onShowSimilar={handleShowSimilar} onPageChange={handlePageChange} />
 
-          {/* Back button: Similar movies view */}
-          {searchConfig.type === 'similar' && (
-            <IconButton
-              onClick={handleBackToSearch}
-              color="primary"
-              sx={{ display: { xs: 'flex', sm: 'inline-flex' } }}
-            >
-              <ArrowBackIcon />
-            </IconButton>
-          )}
-
-          {/* Search bar: responsive width */}
-          <TextField
-            variant="outlined"
-            size="small"
-            placeholder="Search movies..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-            sx={{
-              flexGrow: 1,
-              maxWidth: { xs: '100%', sm: '500px' },
-              ml: { xs: 0, md: 'auto' },
-              mr: { xs: 0, md: 'auto' },
-            }}
-            slotProps={{
-              input: {
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={handleSearch} edge="end">
-                      <SearchIcon color="primary" />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              },
-            }}
-          />
-
-          {/* Theme switcher: always visible at the end */}
-          <ThemeToggleButton />
-        </Toolbar>
-      </AppBar>
-
-      {/* Main content */}
-      <Container maxWidth="xl" sx={{ mt: 4, mb: 4, flexGrow: 1 }}>
-        {/* Context title based on search mode */}
-        <Typography variant="h5" sx={{ color: 'text.primary', mb: 3, fontWeight: 'bold' }}>
-          {searchConfig.type === 'popular' && 'Popular Movies'}
-          {searchConfig.type === 'search' && 'Search results for: '}
-          {searchConfig.type === 'similar' && 'Movies similar to: '}
-
-          {searchConfig.type !== 'popular' && (
-            <Box component="span" sx={{ color: 'primary.main' }}>
-              {searchConfig.type === 'search' ? searchConfig.term : searchConfig.movieName}
-            </Box>
-          )}
-        </Typography>
-
-        {/* The list handles popular, search, and similar modes via its config prop and callbacks */}
-        <MovieList config={searchConfig} onShowSimilar={handleShowSimilar} onPageChange={handlePageChange} />
-      </Container>
-    </Box>
+      {/* Footer: Meta information  */}
+      <Footer />
+    </S.HomeWrapper>
   );
 };
 
