@@ -5,7 +5,7 @@ import type { MovieItem } from '../../types/MovieItem';
 import type { SearchConfig } from '../../types/SeachConfig.ts';
 import { MovieCard } from '../MovieCard.tsx';
 import { MovieDetailModal } from '../MovieDetailModal.tsx';
-import { MovieGrid } from '../MovieGrid.tsx';
+import { MovieGrid } from '../MovieGrid/MovieGrid.tsx';
 import * as S from './MovieList.styles';
 
 interface MovieListProps {
