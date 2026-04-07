@@ -47,7 +47,7 @@ export const MovieCard = memo(({ movie, onClick, isLoading }: MovieCardProps) =>
         }}
       >
         {/* Movie poster */}
-        <Box sx={{ width: '100%', height: 280, overflow: 'hidden', position: 'relative', bgcolor: 'grey.200' }}>
+        <Box sx={{ width: '100%', height: 280, overflow: 'hidden', position: 'relative' }}>
           {isLoading ? (
             <Skeleton variant="rectangular" width="100%" height="100%" animation="wave" />
           ) : (
