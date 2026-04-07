@@ -14,7 +14,7 @@ export const MOVIE_FIELDS = gql`
             name
         }
         img: poster {
-            url: custom(size: "w500")
+            url: custom(size: "w342")
         }
     }
 `;

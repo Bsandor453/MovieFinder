@@ -1,8 +1,9 @@
-import { Box, Button, CircularProgress, Pagination, Stack, Typography } from '@mui/material';
+import { Button, CircularProgress, Grid, Pagination, Stack, Typography } from '@mui/material';
 import { memo, useState } from 'react';
 import { useMovieCollection } from '../hooks/useMovieCollection.ts';
 import type { MovieItem } from '../types/MovieItem';
 import type { SearchConfig } from '../types/SeachConfig.ts';
+import { MovieCard } from './MovieCard.tsx';
 import { MovieDetailModal } from './MovieDetailModal';
 import { MovieGrid } from './MovieGrid';
 
@@ -11,6 +12,9 @@ interface MovieListProps {
   onShowSimilar: (id: string, name: string) => void;
   onPageChange: (page: number) => void;
 }
+
+// For loading state: 8 fixed skeleton items
+const SKELETON_IDS = ['s1', 's2', 's3', 's4', 's5', 's6', 's7', 's8'];
 
 export const MovieList = memo(({ config, onShowSimilar, onPageChange }: MovieListProps) => {
   const [selectedMovie, setSelectedMovie] = useState<MovieItem | null>(null);
@@ -21,9 +25,13 @@ export const MovieList = memo(({ config, onShowSimilar, onPageChange }: MovieLis
   // Status handling: Loading
   if (loading && movies.length === 0) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
-        <CircularProgress size={60} thickness={4} />
-      </Box>
+      <Grid container spacing={3}>
+        {SKELETON_IDS.map((id) => (
+          <Grid key={id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+            <MovieCard isLoading={true} />
+          </Grid>
+        ))}
+      </Grid>
     );
   }
 
