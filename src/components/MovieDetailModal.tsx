@@ -118,35 +118,32 @@ export const MovieDetailModal = ({ movie, onClose, onShowSimilar }: MovieDetailM
               '&::-webkit-scrollbar-thumb': { backgroundColor: 'rgba(0,0,0,0.1)', borderRadius: '4px' },
             }}
           >
-            {/* Related movies trigger button */}
-            <Button
-              fullWidth
-              variant="contained"
-              color="secondary"
-              startIcon={<AutoAwesomeIcon />}
-              onClick={() => {
-                onShowSimilar(displayMovie.id, displayMovie?.name);
-                onClose();
-              }}
-              sx={{ mb: 3, py: 1.5, fontWeight: 'bold' }}
-            >
-              Discover similar movies
-            </Button>
-
             <Grid container spacing={3}>
               {/* Left column: poster image */}
               <Grid size={{ xs: 12, sm: 4 }}>
-                <Box
-                  component="img"
-                  src={displayMovie.img?.url ?? 'https://placehold.co/300x450?text=No+Poster'}
-                  alt={displayMovie.name}
-                  sx={{
-                    width: '100%',
-                    borderRadius: 2,
-                    boxShadow: 3,
-                    display: 'block',
-                  }}
-                />
+                <Box>
+                  <Box
+                    component="img"
+                    src={displayMovie.img?.url ?? 'https://placehold.co/300x450?text=No+Poster'}
+                    sx={{ width: '100%', borderRadius: 2, boxShadow: 3 }}
+                  />
+
+                  {/* Similar movies button */}
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    color="primary"
+                    size="small"
+                    startIcon={<AutoAwesomeIcon />}
+                    onClick={() => {
+                      onShowSimilar(displayMovie.id, displayMovie.name);
+                      onClose();
+                    }}
+                    sx={{ mt: 1, borderRadius: 2, textTransform: 'none', bgcolor: 'action.hover' }}
+                  >
+                    Similar Movies
+                  </Button>
+                </Box>
               </Grid>
 
               {/* Right column: Key movie info */}
