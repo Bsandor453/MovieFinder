@@ -30,7 +30,7 @@ A modern, high-performance React application for exploring movies, featuring **G
 I deliberately chose **React with Vite** instead of Next.js. As the task was a pure frontend-focused assignment without the need for SEO or Server-Side Rendering, Vite provided a faster development cycle and a more lightweight bundle for this specific use case.
 
 ### 2. Performance Optimization (Memoization)
-To prevent unnecessary re-renders in the movie list and search results, I heavily utilized **`useMemo`** and **`useCallback`**. This ensures that complex filtering and data mapping only re-run when the underlying data actually changes, maintaining 60 FPS even with larger datasets.
+Performance optimizations like **useMemo** and **useCallback** were implemented to minimize redundant re-renders. By stabilizing references and memoizing derived data, the application remains responsive and efficient, providing a seamless experience during filtering and search operations.
 
 ### 3. Simplified Navigation
 I decided **not to implement routing** (e.g., React Router) as the core functionality—searching and viewing movie details via modals—is efficiently handled within a single-page state. This avoids architectural overhead while keeping the user flow intuitive and fast.
